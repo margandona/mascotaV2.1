@@ -1,12 +1,37 @@
 body {
     background-color: #ffe4fb; /* Fondo Principal */
+    font-family: 'Roboto', sans-serif; /* Fuente personalizada */
+    color: #4b004b; /* Color del texto principal */
 }
 
 #game-container {
     background-color: #fff2fd; /* Fondo del Contenedor */
     border-radius: 10px;
     padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra del contenedor */
 }
+
+.game-area {
+    position: relative;
+    width: 600px;
+    height: 400px;
+    background-image: url('assets/img/game-background.png'); /* Imagen de fondo */
+    background-size: cover;
+    background-position: center;
+    border: 2px solid #ccc;
+    margin: 20px auto;
+    border-radius: 10px;
+}
+
+.npc {
+    position: absolute;
+    width: 40px;
+    height: 40px;
+    background-color: #ff62df;
+    border-radius: 50%;
+    transition: all 0.3s ease;
+}
+
 
 .btn-primary,
 .btn-secondary,
@@ -15,7 +40,9 @@ body {
 .btn-success {
     background-color: #ff62df; /* Botones generales */
     border: none;
+    color: #fff; /* Color del texto */
     transition: all 0.3s ease; /* Transición suave */
+    border-radius: 5px; /* Bordes redondeados */
 }
 
 .btn-primary:hover,
@@ -25,6 +52,7 @@ body {
 .btn-success:hover {
     background-color: #ff28db; /* Hover */
     transform: scale(1.05); /* Aumentar ligeramente el tamaño al pasar el ratón */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2); /* Sombra en hover */
 }
 
 #pet-buttons .btn-secondary {
@@ -46,18 +74,23 @@ body {
 .progress {
     background-color: #ffc8f7; /* Fondo de la barra */
     border: 1px solid #df07c2; /* Borde de la barra */
+    border-radius: 5px; /* Bordes redondeados */
 }
 
 .inventory-item {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px;
+    padding: 10px;
     border-bottom: 1px solid #df07c2;
+    background-color: #fff2fd; /* Fondo de los objetos del inventario */
+    border-radius: 5px;
+    margin-bottom: 5px; /* Separación entre elementos */
 }
 
 .inventory-item .btn {
     margin-left: 5px;
+    border-radius: 5px; /* Bordes redondeados */
 }
 
 #messages-container {
@@ -65,6 +98,7 @@ body {
     border-radius: 10px;
     padding: 10px;
     margin-top: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
 }
 
 #messages {
@@ -93,4 +127,10 @@ body {
     padding: 10px;
     max-height: 200px;
     overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
 }
+
+
+
+/* Fuente personalizada de Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap');

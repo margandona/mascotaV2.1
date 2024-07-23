@@ -1,28 +1,30 @@
+// assets/js/player.js
+
 class Player {
     constructor() {
-        this.ghostPetz = []; // Lista de mascotas GhostPetz del jugador
-        this.currentPetIndex = 0; // Índice de la mascota actual
-        this.inventory = []; // Inventario de objetos del jugador
-        this.coins = 0; // Monedas del jugador
-        this.missionHistory = []; // Historial de misiones completadas
-        this.loadProgress(); // Cargar progreso guardado al iniciar
-        this.updateSelectionVisibility(); // Actualizar visibilidad de la selección de mascotas
+        this.ghostPetz = [];
+        this.currentPetIndex = 0;
+        this.inventory = [];
+        this.coins = 0;
+        this.missionHistory = [];
+        this.loadProgress();
+        this.updateSelectionVisibility();
     }
 
-    // Agrega una nueva mascota GhostPet al jugador
+    // Añadir un nuevo GhostPet al jugador
     addGhostPet(ghostPet) {
-        if (this.ghostPetz.length < 6) {
+        if (this.ghostPetz.length < 10) {
             this.ghostPetz.push(ghostPet);
             this.updatePetButtons();
             this.showMsg(`Has añadido un nuevo ${ghostPet.type} a tu colección.`, 'info');
             this.saveProgress();
             this.updateSelectionVisibility();
         } else {
-            this.showMsg('Ya tienes el máximo de 6 GhostPetz.', 'warning');
+            this.showMsg('Ya tienes el máximo de 10 GhostPetz.', 'warning');
         }
     }
 
-    // Cambia a la mascota seleccionada por su índice
+    // Cambiar la mascota activa
     switchPet(index) {
         if (index >= 0 && index < this.ghostPetz.length) {
             this.currentPetIndex = index;
@@ -31,7 +33,7 @@ class Player {
         }
     }
 
-    // Actualiza los botones de selección de mascotas
+    // Actualizar los botones de las mascotas
     updatePetButtons() {
         $('#pet-buttons').empty();
         this.ghostPetz.forEach((pet, index) => {
@@ -39,7 +41,7 @@ class Player {
         });
     }
 
-    // Actualiza el inventario de objetos
+    // Actualizar el inventario
     updateInventory() {
         $('#inventory-items').empty();
         this.inventory.forEach((item, index) => {
@@ -53,7 +55,7 @@ class Player {
         });
     }
 
-    // Agrega un objeto al inventario
+    // Añadir un objeto al inventario
     addItemToInventory(item) {
         this.inventory.push(item);
         this.updateInventory();
@@ -61,7 +63,7 @@ class Player {
         this.saveProgress();
     }
 
-    // Usa un objeto del inventario en la mascota actual
+    // Usar un objeto del inventario
     useItem(index) {
         const item = this.inventory[index];
         this.ghostPetz[this.currentPetIndex].applyItem(item);
@@ -71,7 +73,7 @@ class Player {
         this.saveProgress();
     }
 
-    // Vende un objeto del inventario
+    // Vender un objeto del inventario
     sellItem(index) {
         const item = this.inventory[index];
         this.coins += item.value;
@@ -82,17 +84,17 @@ class Player {
         this.saveProgress();
     }
 
-    // Actualiza la cantidad de monedas mostradas
+    // Actualizar el conteo de monedas
     updateCoins() {
         $('#coins').text('Monedas: ' + this.coins);
     }
 
-    // Muestra un mensaje en la interfaz
+    // Mostrar un mensaje al jugador
     showMsg(message, type) {
         $('#messages').prepend(`<p>${type.toUpperCase()}: ${message}</p>`).hide().fadeIn(1000);
     }
 
-    // Compra una nueva mascota GhostPet
+    // Comprar una nueva mascota
     buyPet(type) {
         const costs = { fantasma: 100, espectro: 200, wraith: 300, poltergeist: 400, banshee: 500 };
         const cost = costs[type] || 100;
@@ -108,14 +110,14 @@ class Player {
         }
     }
 
-    // Agrega una misión al historial de misiones completadas
+    // Añadir una misión al historial
     addMissionToHistory(mission) {
         this.missionHistory.push(mission);
         this.updateMissionHistory();
         this.saveProgress();
     }
 
-    // Actualiza el historial de misiones mostradas
+    // Actualizar el historial de misiones
     updateMissionHistory() {
         $('#mission-history-items').empty();
         this.missionHistory.forEach((mission) => {
@@ -123,7 +125,7 @@ class Player {
         });
     }
 
-    // Guarda el progreso del jugador en localStorage
+    // Guardar el progreso del juego en el almacenamiento local
     saveProgress(slot = 1) {
         const progress = {
             ghostPetz: this.ghostPetz.map(pet => pet.serialize()),
@@ -135,7 +137,7 @@ class Player {
         localStorage.setItem(`ghostPetzProgress_${slot}`, JSON.stringify(progress));
     }
 
-    // Carga el progreso del jugador desde localStorage
+    // Cargar el progreso del juego desde el almacenamiento local
     loadProgress(slot = 1) {
         const progress = JSON.parse(localStorage.getItem(`ghostPetzProgress_${slot}`));
         if (progress) {
@@ -160,7 +162,7 @@ class Player {
         }
     }
 
-    // Actualiza la visibilidad de la selección de mascotas
+    // Actualizar la visibilidad de la selección de mascotas
     updateSelectionVisibility() {
         if (this.ghostPetz.length === 0) {
             $('#collapseSelection').collapse('show');
@@ -169,7 +171,7 @@ class Player {
         }
     }
 
-    // Restablece el juego
+    // Reiniciar el juego y eliminar todo el progreso
     resetGame() {
         localStorage.removeItem('ghostPetzProgress');
         this.ghostPetz = [];

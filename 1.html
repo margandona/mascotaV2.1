@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+
+    <script>
+
+        function startMission(mission) {
+            $('#minigameModal').modal('show');
+            player.ghostPetz[player.currentPetIndex].currentMission = mission;
+        }
+
+        function completeMission() {
+            const missionEffects = {
+                vencerCriaturas: { health: -15, skills: 22.5, happiness: 15, xp: 45, coins: 75 },
+                resolverPuzles: { knowledge: 30, energy: -15, happiness: 7.5, xp: 37.5, coins: 45 }
+                // Otros tipos de misiones
+            };
+            const effects = missionEffects[player.ghostPetz[player.currentPetIndex].currentMission];
+            player.ghostPetz[player.currentPetIndex].applyEffects(effects);
+            player.coins += effects.coins || 0;
+            player.updateCoins();
+            player.showMsg(`Tu GhostPet ha completado la misión: ${player.ghostPetz[player.currentPetIndex].currentMission}`, "info");
+        }
+
+
+
+    </script>
+</body>
+
+</html>

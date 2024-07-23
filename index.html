@@ -69,21 +69,21 @@
                     <div class="card-body text-center">
                         <img id="pet-image" src="" class="img-fluid mb-3" alt="GhostPet Image">
                         <div class="row">
-                            <div class="col-6">
-                                <p><i class="fas fa-paw"></i> <span id="pet-type"></span></p>
-                                <p><i class="fas fa-level-up-alt"></i> <span id="pet-level"></span></p>
-                                <p><i class="fas fa-star"></i> <span id="pet-xp"></span></p>
-                                <p><i class="fas fa-birthday-cake"></i> <span id="pet-age"></span></p>
-                                <p><i class="fas fa-disease"></i> <span id="pet-illness"></span></p>
-                            </div>
-                            <div class="col-6">
-                                <p><i class="fas fa-heart"></i> <span id="pet-health"></span></p>
-                                <p><i class="fas fa-bolt"></i> <span id="pet-energy"></span></p>
-                                <p><i class="fas fa-smile"></i> <span id="pet-happiness"></span></p>
-                                <p><i class="fas fa-book"></i> <span id="pet-emotions"></span></p>
-                            </div>
-                        </div>
-                        
+    <div class="col-6">
+        <p><i class="fas fa-paw"></i> <span id="pet-type"></span></p>
+        <p><i class="fas fa-level-up-alt"></i> <span id="pet-level"></span></p>
+        <p><i class="fas fa-star"></i> <span id="pet-xp"></span></p>
+        <p><i class="fas fa-birthday-cake"></i> <span id="pet-age"></span></p>
+        <p><i class="fas fa-disease"></i> <span id="pet-illness"></span></p>
+    </div>
+    <div class="col-6">
+        <p><i class="fas fa-heart"></i> <span id="pet-health"></span></p>
+        <p><i class="fas fa-bolt"></i> <span id="pet-energy"></span></p>
+        <p><i class="fas fa-smile"></i> <span id="pet-happiness"></span></p>
+        <p><i class="fas fa-book"></i> <span id="pet-emotions"></span></p>
+    </div>
+</div>
+
                         <div class="progress mb-3">
                             <div id="progress-health" class="progress-bar" role="progressbar" style="width: 100%;">Salud
                                 100%</div>
@@ -360,6 +360,26 @@
             </div>
             <div class="modal-body">
                 <p id="battleResult">¡La batalla está en curso!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal de Logros y Recompensas -->
+<div class="modal fade" id="achievementsModal" tabindex="-1" role="dialog" aria-labelledby="achievementsModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="achievementsModalLabel">Logros y Recompensas</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="achievementResult">¡Felicidades! Has logrado:</p>
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>

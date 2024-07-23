@@ -130,19 +130,6 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
 }
 
-/* assets/css/styles.css */
-
-/* Estilos para NPC del jugador */
-.npc-player {
-    border: 2px solid blue;
-    box-shadow: 0 0 10px blue;
-}
-
-/* Estilos para NPC enemigo */
-.npc-enemy {
-    border: 2px solid red;
-    box-shadow: 0 0 10px red;
-}
 
 
 

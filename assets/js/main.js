@@ -1,4 +1,3 @@
-// assets/js/main.js
 document.addEventListener("DOMContentLoaded", function () {
     // Inicializar el jugador
     window.player = new Player();
@@ -8,6 +7,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Cargar eventos
     setupEventListeners();
+
+    // Inicializar intervalos de recarga de energía
+    setInterval(() => {
+        player.ghostPetz.forEach(pet => {
+            if (pet.energy < 100) {
+                pet.energy = Math.min(pet.energy + 1, 100);
+                pet.updateStats();
+            }
+        });
+    }, 60000); // Recargar 1 punto de energía cada 60 segundos
+
+    // Mostrar el estado inicial del juego
+    showInitialState();
 });
 
 
@@ -53,6 +65,11 @@ function setupEventListeners() {
     $('#reset-game-button').on('click', function () {
         resetGame();
     });
+
+    // Evento para iniciar un mini-juego
+    $('#start-minigame-button').on('click', function () {
+        startMinigame();
+    });
 }
 
 // Función para seleccionar una mascota
@@ -81,12 +98,29 @@ function exploreArea(area) {
 
 // Función para comprar una mascota
 function buyPet(type) {
-    player.buyPet(type);
+    player.buyPetOrItem(type);
 }
 
 // Función para reiniciar el juego
 function resetGame() {
     if (confirm('¿Estás seguro de que quieres reiniciar el juego?')) {
         player.resetGame();
+    }
+}
+
+// Función para iniciar un mini-juego
+function startMinigame() {
+    $('#minigameModal').modal('show');
+    // Lógica adicional para iniciar el mini-juego
+}
+
+// Función para mostrar el estado inicial del juego
+function showInitialState() {
+    if (player.ghostPetz.length > 0) {
+        player.switchPet(player.currentPetIndex);
+        $('#main-image').attr('src', player.ghostPetz[player.currentPetIndex].getImagePath());
+        $('#pet-status-card, #activities-card, #missions-card, #inventory-card, #coins-card, #explore-card, #switch-pet-card, #buy-pet-card, #missions-history-card, #options-card').show();
+    } else {
+        $('#collapseSelection').collapse('show');
     }
 }

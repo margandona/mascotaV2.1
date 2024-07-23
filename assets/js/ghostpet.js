@@ -20,7 +20,6 @@ class GhostPet {
         this.goal = null;
     }
 
-    // Método para serializar las propiedades del NPC
     serialize() {
         return {
             type: this.type,
@@ -36,12 +35,11 @@ class GhostPet {
             knowledge: this.knowledge,
             skills: this.skills,
             bathing: this.bathing,
-            state: this.state, // Incluir estado en la serialización
-            goal: this.goal // Incluir objetivo en la serialización
+            state: this.state,
+            goal: this.goal
         };
     }
-
-    // Método para actualizar las estadísticas del NPC
+    //actualiza estado
     updateStats() {
         $('#pet-type').text('Tipo: ' + this.type);
         $('#pet-level').text('Nivel: ' + this.level);
@@ -59,8 +57,7 @@ class GhostPet {
 
         this.updateImage();
     }
-
-    // Método para ganar experiencia
+    //gana experiencia
     gainXP(amount) {
         this.xp += amount;
         while (this.xp >= this.xpToNextLevel) {
@@ -68,9 +65,8 @@ class GhostPet {
         }
         this.updateStats();
     }
-
-     // Método para subir de nivel
-     levelUp() {
+    //sube nivel
+    levelUp() {
         this.level++;
         this.xp -= this.xpToNextLevel;
         this.xpToNextLevel = Math.round(this.xpToNextLevel * 1.30);
@@ -82,8 +78,7 @@ class GhostPet {
         this.unlockAbilities();
         player.saveProgress();
     }
-
-    // Método para desbloquear habilidades
+    //desbloquea habilidades
     unlockAbilities() {
         const abilities = {
             2: 'Double Jump',
@@ -94,22 +89,19 @@ class GhostPet {
             player.showMsg(`¡Has desbloqueado una nueva habilidad: ${abilities[this.level]}!`, 'success');
         }
     }
-
-    // Método para actualizar la imagen del NPC
+    //actualiza imagen
     updateImage() {
         const levels = { fantasma: 3, espectro: 3, wraith: 3, poltergeist: 3, banshee: 3 };
         let imagePath = `assets/img/${this.type}${Math.min(this.level, levels[this.type] || 1)}.webp`;
         $('#pet-image').attr('src', imagePath).hide().fadeIn(1000);
     }
-
-    // Método para obtener la ruta de la imagen
+    //obtiene la ruta de la imagen
     getImagePath() {
         const levels = { fantasma: 3, espectro: 3, wraith: 3, poltergeist: 3, banshee: 3 };
         return `assets/img/${this.type}${Math.min(this.level, levels[this.type] || 1)}.webp`;
     }
-
-     // Método para realizar una actividad
-     performActivity(activity) {
+    //inicia actividad
+    performActivity(activity) {
         if (this.illness && (activity === 'jugar' || activity === 'estudiar')) {
             player.showMsg('Tu GhostPet está enfermo y no puede realizar esta actividad.', 'warning');
             return;
@@ -150,9 +142,7 @@ class GhostPet {
         this.checkRandomEvent();
         player.saveProgress();
     }
-
-
-    // Método para aplicar los efectos de una actividad
+    //aplica efectos de la actividad
     applyEffects(effects) {
         Object.keys(effects).forEach(key => {
             this[key] = Math.min(this[key] + effects[key], 100);
@@ -162,14 +152,12 @@ class GhostPet {
         }
     }
 
-    // Método para iniciar una misión
     startMission(mission) {
         $('#minigameModal').modal('show');
         this.currentMission = mission;
-        this.state = 'onMission'; // Actualizar el estado
+        this.state = 'onMission';
     }
-
-    // Método para completar una misión
+    //metodo mision
     completeMission() {
         const missionEffects = {
             vencerCriaturas: {
@@ -237,14 +225,13 @@ class GhostPet {
         } else {
             player.showMsg("Tu GhostPet no tiene suficiente energía para realizar esta misión.", "warning");
         }
-        this.state = 'idle'; // Actualizar el estado
+        this.state = 'idle';
         this.updateStats();
         this.checkRandomEvent();
         player.saveProgress();
     }
-
-     // Método para explorar un área
-     exploreArea(area) {
+    //metodo para explorear area
+    exploreArea(area) {
         const explorationEvents = [
             () => this.findRandomItem(),
             () => this.startRandomMission(),
@@ -261,36 +248,33 @@ class GhostPet {
         this.updateStats();
         player.saveProgress();
     }
-
-     // Método para iniciar una misión aleatoria
-     startRandomMission() {
+    //metodo que inicia una mision al azar
+    startRandomMission() {
         const missions = ['vencerCriaturas', 'resolverPuzles', 'desafiosConocimiento', 'busquedaTesoros', 'rescatarCriaturas', 'explorarMontana', 'desafiosSabiduria'];
         const mission = missions[Math.floor(Math.random() * missions.length)];
         this.startMission(mission);
     }
-
-    // Método para encontrar monedas
+    //metodo para encontrar moneda
     findCoins() {
         const coinsFound = Math.floor(Math.random() * 100);
         player.coins += coinsFound;
         player.showMsg(`Tu GhostPet ha encontrado ${coinsFound} monedas!`, 'success');
-    } 
-
-    // Método para perder monedas
+    }
+    //metodo para perder moneda
     loseCoins() {
         const coinsLost = Math.floor(Math.random() * 50);
         player.coins = Math.max(player.coins - coinsLost, 0);
         player.showMsg(`Tu GhostPet ha perdido ${coinsLost} monedas.`, 'danger');
     }
-
-    // Método para perder monedas
-    loseCoins() {
-        const coinsLost = Math.floor(Math.random() * 50);
-        player.coins = Math.max(player.coins - coinsLost, 0);
-        player.showMsg(`Tu GhostPet ha perdido ${coinsLost} monedas.`, 'danger');
+    //metodo para cambiar estado
+    changeRandomStats() {
+        const stats = ['health', 'energy', 'happiness', 'knowledge', 'skills'];
+        const stat = stats[Math.floor(Math.random() * stats.length)];
+        const change = Math.floor(Math.random() * 21) - 10; // Cambios entre -10 y +10
+        this[stat] = Math.min(Math.max(this[stat] + change, 0), 100);
+        player.showMsg(`Las estadísticas de tu GhostPet han cambiado: ${stat} ${change > 0 ? '+' : ''}${change}`, 'info');
     }
-    
-    //metodo que verificac eventos al azar
+    //metodo para checkear eventos al azar
     checkRandomEvent() {
         const randomEvent = Math.random();
         if (randomEvent < 0.1) {
@@ -302,8 +286,7 @@ class GhostPet {
             player.addItemToInventory(item);
         }
     }
-
-    // Método para encontrar un objeto aleatorio
+    //metodo para encontrar un objeto al azar
     findRandomItem() {
         const items = [
             { name: 'Pastel', type: 'comida', value: 20, effect: { health: 10, energy: 10, happiness: 10, xp: 10 } },
@@ -329,15 +312,13 @@ class GhostPet {
         ];
         return items[Math.floor(Math.random() * items.length)];
     }
-
-    // Método para aplicar un objeto al NPC
+    //metodo para utilizar un objeto
     applyItem(item) {
         this.applyEffects(item.effect);
         player.showMsg(`Has usado ${item.name} en tu GhostPet.`, 'info');
         player.saveProgress();
     }
-
-    // Método para incrementar la edad del NPC
+    //metodo para cumplir edad
     increaseAge() {
         setInterval(() => {
             this.age++;
@@ -346,23 +327,20 @@ class GhostPet {
             player.saveProgress();
         }, 500000);
     }
-
-    // Método para deserializar los datos del NPC
+    //metodo para actualizar estado
     deserialize(data) {
         Object.assign(this, data);
         this.updateImage();
         this.updateStats();
     }
-
-    // Nueva función: decidir actividad basada en la salud
+    //metodo para decidir actividad al azar
     decideActivity() {
         if (this.health < 50) return 'alimentar';
         if (this.energy < 50) return 'descansar';
         if (this.happiness < 50) return 'socializar';
         return 'ejercicio';
     }
-
-    // Nueva función: decidir actividad basada en la hora del día
+    //decide una actividad basado en la hora
     decideActivityBasedOnTime() {
         const hours = new Date().getHours();
         if (hours >= 6 && hours < 18) {
@@ -371,13 +349,11 @@ class GhostPet {
             return this.decideActivity();
         }
     }
-
-    // Método para establecer un nuevo objetivo
+    //metodo para ganar
     setGoal(goal) {
         this.goal = goal;
     }
-
-    // Método para actualizar el estado basado en el objetivo actual
+    //actualiza el estado
     updateState() {
         if (this.goal) {
             switch (this.goal.type) {
@@ -397,11 +373,23 @@ class GhostPet {
                         this.state = 'idle';
                     }
                     break;
-                // Otros casos según los objetivos
                 default:
                     this.state = 'idle';
                     break;
             }
         }
+    }
+
+    // Método para iniciar una batalla aleatoria
+    randomBattle() {
+        const npc1Stats = this.calculateStats();
+        const npc2Stats = this.calculateStats();
+        const winner = npc1Stats > npc2Stats ? 'NPC1' : 'NPC2';
+        player.showMsg(`¡Batalla aleatoria! ${winner} ha ganado.`, 'info');
+    }
+
+    // Método para calcular estadísticas para la batalla
+    calculateStats() {
+        return Math.floor(Math.random() * 100);
     }
 }

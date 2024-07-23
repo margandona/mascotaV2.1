@@ -1,7 +1,5 @@
 // assets/js/game.js
-
 let battleStarted = false;
-
 document.addEventListener("DOMContentLoaded", function () {
     window.player = new Player();
 
@@ -98,6 +96,19 @@ document.addEventListener("DOMContentLoaded", function () {
 
     handleNPCClick(npc1, 'NPC1');
     handleNPCClick(npc2, 'NPC2');
+
+    // Evento para iniciar el minijuego "Caza de Fantasmas"
+    $('#missions-buttons').on('click', 'button', function () {
+        const mission = $(this).data('mission');
+        if (mission === 'vencerCriaturas') {
+            $('#minigameModal').modal('show');
+        }
+    });
+
+    // Evento para iniciar el minijuego cuando se presiona "Comenzar"
+    $('#startMinigame').on('click', function () {
+        startGhostHuntGame();
+    });
 });
 
 // Crear un NPC

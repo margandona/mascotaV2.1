@@ -306,26 +306,7 @@
         </div>
     </div>
 
-    <!-- Modal de minijuego -->
-    <div class="modal fade" id="minigameModal" tabindex="-1" role="dialog" aria-labelledby="minigameModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="minigameModalLabel">Minijuego</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>Aquí va el contenido del minijuego.</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" id="closeMissionModal">Completar Misión</button>
-                </div>
-            </div>
-        </div>
-    </div>
+    
 
     <!-- Modal de Batalla -->
 <div class="modal fade" id="battleModal" tabindex="-1" role="dialog" aria-labelledby="battleModalLabel" aria-hidden="true">
@@ -346,6 +327,30 @@
         </div>
     </div>
 </div>
+
+<!-- Modal de minijuego -->
+<div class="modal fade" id="minigameModal" tabindex="-1" role="dialog" aria-labelledby="minigameModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="minigameModalLabel">Minijuego</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="minigame-container">
+                    <!-- Contenido del minijuego se cargará aquí -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" id="startMinigame">Comenzar</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 
     <!-- Modal de Batalla -->
@@ -396,6 +401,8 @@
 <script src="assets/js/player.js"></script>
 <script src="assets/js/game.js"></script>
 <script src="assets/js/main.js"></script>
+<script src="assets/js/minigame.js"></script>
+
 
 </body>
 

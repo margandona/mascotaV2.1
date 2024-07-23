@@ -130,6 +130,46 @@ body {
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Sombra */
 }
 
+/* assets/css/styles.css */
+
+/* Estilos para NPC del jugador */
+.npc-player {
+    border: 2px solid blue;
+    box-shadow: 0 0 10px blue;
+}
+
+/* Estilos para NPC enemigo */
+.npc-enemy {
+    border: 2px solid red;
+    box-shadow: 0 0 10px red;
+}
+
+#ghostHuntGame {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background-color: #000;
+}
+
+.ghost {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: url('../img/ghost.png') no-repeat center center;
+    background-size: contain;
+    cursor: pointer;
+}
+
+.npc-ghost {
+    position: absolute;
+    width: 50px;
+    height: 50px;
+    background: url('../img/npc-ghost.png') no-repeat center center;
+    background-size: contain;
+}
+
+
+
 
 
 

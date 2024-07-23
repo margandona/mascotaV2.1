@@ -72,6 +72,7 @@
                             <div class="col-6">
                                 <p><i class="fas fa-paw"></i> <span id="pet-type"></span></p>
                                 <p><i class="fas fa-level-up-alt"></i> <span id="pet-level"></span></p>
+                                <p><i class="fas fa-star"></i> <span id="pet-xp"></span></p>
                                 <p><i class="fas fa-birthday-cake"></i> <span id="pet-age"></span></p>
                                 <p><i class="fas fa-disease"></i> <span id="pet-illness"></span></p>
                             </div>
@@ -82,6 +83,7 @@
                                 <p><i class="fas fa-book"></i> <span id="pet-emotions"></span></p>
                             </div>
                         </div>
+                        
                         <div class="progress mb-3">
                             <div id="progress-health" class="progress-bar" role="progressbar" style="width: 100%;">Salud
                                 100%</div>
@@ -236,25 +238,34 @@
                     <h5 class="mb-0">
                         <button class="btn btn-link collapsed" data-toggle="collapse" data-target="#collapseBuyPet"
                             aria-expanded="false" aria-controls="collapseBuyPet">
-                            <i class="fas fa-shopping-cart"></i> Comprar Nuevos GhostPetz
+                            <i class="fas fa-shopping-cart"></i> Comprar Nuevos GhostPetz y Artículos
                         </button>
                     </h5>
                 </div>
                 <div id="collapseBuyPet" class="collapse" aria-labelledby="headingBuyPet" data-parent="#accordion">
                     <div class="card-body text-center">
-                        <button class="btn btn-success mx-2 mb-2" onclick="buyPet('fantasma')"><i
+                        <h5>GhostPetz</h5>
+                        <button class="btn btn-success mx-2 mb-2" onclick="buyPetOrItem('fantasma')"><i
                                 class="fas fa-ghost"></i> Comprar Fantasma - 100 Monedas</button>
-                        <button class="btn btn-success mx-2 mb-2" onclick="buyPet('espectro')"><i
+                        <button class="btn btn-success mx-2 mb-2" onclick="buyPetOrItem('espectro')"><i
                                 class="fas fa-ghost"></i> Comprar Espectro - 200 Monedas</button>
-                        <button class="btn btn-success mx-2 mb-2" onclick="buyPet('wraith')"><i
+                        <button class="btn btn-success mx-2 mb-2" onclick="buyPetOrItem('wraith')"><i
                                 class="fas fa-ghost"></i> Comprar Wraith - 300 Monedas</button>
-                        <button class="btn btn-success mx-2 mb-2" onclick="buyPet('poltergeist')"><i
+                        <button class="btn btn-success mx-2 mb-2" onclick="buyPetOrItem('poltergeist')"><i
                                 class="fas fa-ghost"></i> Comprar Poltergeist - 400 Monedas</button>
-                        <button class="btn btn-success mx-2 mb-2" onclick="buyPet('banshee')"><i
+                        <button class="btn btn-success mx-2 mb-2" onclick="buyPetOrItem('banshee')"><i
                                 class="fas fa-ghost"></i> Comprar Banshee - 500 Monedas</button>
+                        <h5>Artículos</h5>
+                        <button class="btn btn-success mx-2 mb-2" onclick="buyPetOrItem('pastel', true)"><i
+                                class="fas fa-birthday-cake"></i> Pastel - 50 Monedas</button>
+                        <button class="btn btn-success mx-2 mb-2" onclick="buyPetOrItem('jarabe', true)"><i
+                                class="fas fa-prescription-bottle-alt"></i> Jarabe - 100 Monedas</button>
+                        <button class="btn btn-success mx-2 mb-2" onclick="buyPetOrItem('espada', true)"><i
+                                class="fas fa-sword"></i> Espada - 200 Monedas</button>
                     </div>
                 </div>
             </div>
+            
             <div class="card" id="missions-history-card" style="display:none;">
                 <div class="card-header text-center" id="headingMissionsHistory">
                     <h5 class="mb-0">
@@ -316,27 +327,47 @@
         </div>
     </div>
 
-    <!-- Modal para Interacciones con NPC -->
-    <div class="modal fade" id="npcModal" tabindex="-1" role="dialog" aria-labelledby="npcModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="npcModalLabel">Interacción con el NPC</h5>
-                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <p>¡Has interactuado con el NPC!</p>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
-                </div>
+    <!-- Modal de Batalla -->
+<div class="modal fade" id="battleModal" tabindex="-1" role="dialog" aria-labelledby="battleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="battleModalLabel">Batalla entre NPCs</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="battleResult">¡La batalla está en curso!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
             </div>
         </div>
     </div>
-</body>
+</div>
+
+
+    <!-- Modal de Batalla -->
+<div class="modal fade" id="battleModal" tabindex="-1" role="dialog" aria-labelledby="battleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="battleModalLabel">Batalla entre NPCs</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p id="battleResult">¡La batalla está en curso!</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>

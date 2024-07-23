@@ -94,20 +94,44 @@ class Player {
         $('#messages').prepend(`<p>${type.toUpperCase()}: ${message}</p>`).hide().fadeIn(1000);
     }
 
-    // Comprar una nueva mascota
-    buyPet(type) {
-        const costs = { fantasma: 100, espectro: 200, wraith: 300, poltergeist: 400, banshee: 500 };
+    // Comprar una nueva mascota o artículo
+    buyPetOrItem(type, isItem = false) {
+        const costs = { 
+            fantasma: 100, espectro: 200, wraith: 300, poltergeist: 400, banshee: 500,
+            pastel: 50, jarabe: 100, espada: 200 
+        };
+        const levels = { pastel: 2, jarabe: 3, espada: 5 };
+
         const cost = costs[type] || 100;
-        if (this.coins >= cost) {
-            this.coins -= cost;
+        if (this.coins < cost) {
+            this.showMsg('No tienes suficientes monedas para comprar este artículo o GhostPet.', 'danger');
+            return;
+        }
+
+        if (isItem && this.ghostPetz[this.currentPetIndex].level < levels[type]) {
+            this.showMsg(`Necesitas estar al nivel ${levels[type]} para comprar este artículo.`, 'danger');
+            return;
+        }
+
+        this.coins -= cost;
+        this.updateCoins();
+
+        if (isItem) {
+            const itemsForSale = {
+                pastel: { name: 'Pastel', type: 'comida', value: 20, effect: { health: 10, energy: 10, happiness: 10, xp: 10 } },
+                jarabe: { name: 'Jarabe', type: 'medicina', value: 30, effect: { health: 40, xp: 10 } },
+                espada: { name: 'Espada', type: 'arma', value: 40, effect: { skills: 15, xp: 20 } }
+            };
+            const item = itemsForSale[type];
+            this.addItemToInventory(item);
+            this.showMsg(`Has comprado un ${type} por ${cost} monedas.`, 'success');
+        } else {
             const ghostPet = new GhostPet(type);
             this.addGhostPet(ghostPet);
-            this.updateCoins();
             this.showMsg(`Has comprado un ${type} por ${cost} monedas.`, 'success');
-            this.saveProgress();
-        } else {
-            this.showMsg('No tienes suficientes monedas para comprar este GhostPet.', 'danger');
         }
+
+        this.saveProgress();
     }
 
     // Añadir una misión al historial

@@ -45,7 +45,7 @@ class GhostPet {
     updateStats() {
         $('#pet-type').text('Tipo: ' + this.type);
         $('#pet-level').text('Nivel: ' + this.level);
-        $('#pet-xp').text('XP: ' + this.xp + '/' + this.xpToNextLevel);
+        $('#pet-xp').text(`XP: ${this.xp}/${this.xpToNextLevel}`);
         $('#pet-health').text('Salud: ' + this.health);
         $('#pet-energy').text('Energía: ' + this.energy);
         $('#pet-happiness').text('Felicidad: ' + this.happiness);
@@ -255,6 +255,7 @@ class GhostPet {
         const effects = explorationEffects[area];
         if (effects) {
             this.applyEffects(effects);
+            player.addMissionToHistory({ description: `Exploración en ${area}`, rewards: [] });
             player.showMsg(`Tu GhostPet ha explorado: ${area}`, 'info');
         } else {
             player.showMsg("No se puede explorar esta área.", "warning");

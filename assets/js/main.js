@@ -1,13 +1,15 @@
 // assets/js/main.js
-
-// Inicializar el juego cuando el DOM esté completamente cargado
 document.addEventListener("DOMContentLoaded", function () {
     // Inicializar el jugador
     window.player = new Player();
+    
+    // Cargar el progreso del jugador si existe
+    player.loadProgress();
 
     // Cargar eventos
     setupEventListeners();
 });
+
 
 // Función para configurar los eventos
 function setupEventListeners() {

@@ -1,5 +1,3 @@
-// assets/js/game.js
-
 document.addEventListener("DOMContentLoaded", function () {
     window.player = new Player();
 
@@ -13,7 +11,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
     // Crear NPCs
     const npc1 = createNPC('npc1');
-    const npc2 = createNPC('npc2');
+    const npc2 = createNPC('npc2', true); // true para indicar que es el NPC enemigo
     gameArea.appendChild(npc1);
     gameArea.appendChild(npc2);
 
@@ -52,6 +50,8 @@ document.addEventListener("DOMContentLoaded", function () {
     // Empezar el movimiento aleatorio
     moveRandomly(npc2);
 
+    let battleOngoing = false; // Bandera para controlar la colisión
+
     // Comprobar colisiones entre NPCs
     setInterval(checkCollision, 100);
 
@@ -60,16 +60,25 @@ document.addEventListener("DOMContentLoaded", function () {
         const rect1 = npc1.getBoundingClientRect();
         const rect2 = npc2.getBoundingClientRect();
 
+        const buffer = 20; // Ampliar área de colisión
+
         if (
-            rect1.left < rect2.right &&
-            rect1.right > rect2.left &&
-            rect1.top < rect2.bottom &&
-            rect1.bottom > rect2.top
+            rect1.left < rect2.right + buffer &&
+            rect1.right > rect2.left - buffer &&
+            rect1.top < rect2.bottom + buffer &&
+            rect1.bottom > rect2.top - buffer &&
+            !battleOngoing
         ) {
+            battleOngoing = true;
             $('#battleModal').modal('show');
-            startBattle();
         }
     }
+
+    // Evento para procesar la batalla al cerrar el modal
+    $('#battleModal').on('hidden.bs.modal', function () {
+        startBattle();
+        battleOngoing = false;
+    });
 
     // Evento para mostrar el modal al hacer clic en el NPC1
     npc1.addEventListener('click', function () {
@@ -94,15 +103,24 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // Crear un NPC
-function createNPC(id) {
+function createNPC(id, isEnemy = false) {
     const npc = document.createElement("div");
     npc.classList.add("npc");
     npc.id = id;
+    if (isEnemy) {
+        npc.classList.add("npc-enemy"); // Clase para el NPC enemigo
+    } else {
+        npc.classList.add("npc-player"); // Clase para el NPC del jugador
+    }
     return npc;
 }
 
 // Función para seleccionar una mascota
 function selectPet(type) {
+    if (player.ghostPetz.length > 0) {
+        player.showMsg('Ya tienes un GhostPet. Usa la opción de comprar para adquirir más.', 'warning');
+        return;
+    }
     const ghostPet = new GhostPet(type);
     player.addGhostPet(ghostPet);
     player.switchPet(player.ghostPetz.length - 1);
@@ -125,9 +143,9 @@ function exploreArea(area) {
     player.ghostPetz[player.currentPetIndex].exploreArea(area);
 }
 
-// Función para comprar una mascota
-function buyPet(type) {
-    player.buyPet(type);
+// Función para comprar una mascota o artículo
+function buyPetOrItem(type, isItem = false) {
+    player.buyPetOrItem(type, isItem);
 }
 
 // Función para reiniciar el juego
@@ -150,6 +168,7 @@ function startBattle() {
     $('#battleResult').text(`${winner} ha ganado la batalla!`);
     player.ghostPetz[player.currentPetIndex].gainXP(20);
     player.updateCoins(10);
+    player.addMissionToHistory({ description: `Batalla entre NPCs`, rewards: [`Ganador: ${winner}`] });
 }
 
 function calculateNPCStats() {

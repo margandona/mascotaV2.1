@@ -1,5 +1,5 @@
-// assets/js/game.js
 let battleStarted = false;
+
 document.addEventListener("DOMContentLoaded", function () {
     window.player = new Player();
 
@@ -100,7 +100,7 @@ document.addEventListener("DOMContentLoaded", function () {
     // Evento para iniciar el minijuego "Caza de Fantasmas"
     $('#missions-buttons').on('click', 'button', function () {
         const mission = $(this).data('mission');
-        if (mission === 'vencerCriaturas') {
+        if (mission === 'rescatarCriaturas') {
             $('#minigameModal').modal('show');
         }
     });
@@ -178,4 +178,114 @@ function startBattle() {
 
 function calculateNPCStats() {
     return Math.floor(Math.random() * 100);
+}
+
+// Variables globales para el minijuego
+let score, targetScore, speed, timeLeft, gameInterval, npcInterval, timerInterval;
+
+// Función para iniciar el minijuego "Caza de Fantasmas"
+function startGhostHuntGame() {
+    const gameArea = document.getElementById("minigame-container");
+    gameArea.innerHTML = `
+        <div id="ghostHuntGame"></div>
+        <div class="minigame-info">
+            <p id="scoreCounter">Fantasmas atrapados: 0</p>
+            <p id="targetCounter">Meta: 10</p>
+            <p id="timer">Tiempo restante: 30s</p>
+        </div>
+    `;
+
+    const ghostHuntGame = document.getElementById("ghostHuntGame");
+    ghostHuntGame.style.width = '100%';
+    ghostHuntGame.style.height = '400px';
+    ghostHuntGame.style.backgroundColor = '#000';
+
+    score = 0;
+    targetScore = 10;
+    speed = 1000;
+    timeLeft = 30;
+
+    gameInterval = setInterval(spawnGhost, speed);
+    npcInterval = null;
+
+    timerInterval = setInterval(() => {
+        timeLeft--;
+        document.getElementById('timer').innerText = `Tiempo restante: ${timeLeft}s`;
+        if (timeLeft <= 0) {
+            clearInterval(timerInterval);
+            endGhostHuntGame();
+        }
+    }, 1000);
+}
+
+function spawnGhost() {
+    const ghostHuntGame = document.getElementById("ghostHuntGame");
+    const ghost = document.createElement('div');
+    ghost.classList.add('ghost');
+    ghost.style.top = Math.random() * (ghostHuntGame.clientHeight - 50) + 'px';
+    ghost.style.left = Math.random() * (ghostHuntGame.clientWidth - 50) + 'px';
+    ghost.addEventListener('click', () => {
+        score++;
+        updateScore();
+        ghost.remove();
+        adjustDifficulty();
+        checkForNpc();
+    });
+    ghostHuntGame.appendChild(ghost);
+}
+
+function updateScore() {
+    document.getElementById('scoreCounter').innerText = `Fantasmas atrapados: ${score}`;
+}
+
+function adjustDifficulty() {
+    if (score >= targetScore) {
+        targetScore += 10;
+        speed *= 0.9;
+        clearInterval(gameInterval);
+        gameInterval = setInterval(spawnGhost, speed);
+    }
+    document.getElementById('targetCounter').innerText = `Meta: ${targetScore}`;
+}
+
+function checkForNpc() {
+    if (score >= targetScore / 2 && !npcInterval) {
+        npcInterval = setInterval(spawnNpc, 2000);
+    }
+}
+
+function spawnNpc() {
+    const ghostHuntGame = document.getElementById("ghostHuntGame");
+    const npc = document.createElement('div');
+    npc.classList.add('npc-ghost');
+    npc.style.top = Math.random() * (ghostHuntGame.clientHeight - 50) + 'px';
+    npc.style.left = Math.random() * (ghostHuntGame.clientWidth - 50) + 'px';
+    ghostHuntGame.appendChild(npc);
+
+    setTimeout(() => {
+        const ghosts = document.querySelectorAll('.ghost');
+        ghosts.forEach(ghost => {
+            const ghostRect = ghost.getBoundingClientRect();
+            const npcRect = npc.getBoundingClientRect();
+            if (
+                ghostRect.left < npcRect.right &&
+                ghostRect.right > npcRect.left &&
+                ghostRect.top < npcRect.bottom &&
+                ghostRect.bottom > npcRect.top
+            ) {
+                ghost.remove();
+            }
+        });
+        npc.remove();
+    }, 1000);
+}
+
+function endGhostHuntGame() {
+    clearInterval(gameInterval);
+    clearInterval(npcInterval);
+    clearInterval(timerInterval);
+    alert(`¡Juego terminado! Has atrapado ${score} fantasmas.`);
+    $('#minigameModal').modal('hide');
+    player.addMissionToHistory({ description: `Caza de Fantasmas`, rewards: [`Fantasmas atrapados: ${score}`, `Premio: ${score * 10} monedas`] });
+    player.updateCoins(score * 10);
 }

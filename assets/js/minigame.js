@@ -115,3 +115,6 @@ function endGhostHuntGame() {
     player.saveProgress();
     $('#minigameModal').modal('hide');
 }
+
+
+    

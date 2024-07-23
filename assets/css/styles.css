@@ -168,6 +168,14 @@ body {
     background-size: contain;
 }
 
+.minigame-info {
+    text-align: center;
+    margin-top: 10px;
+}
+
+.minigame-info p {
+    color: rgb(253, 1, 1);
+}
 
 
 

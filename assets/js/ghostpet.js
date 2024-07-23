@@ -16,8 +16,8 @@ class GhostPet {
         this.skills = 0;
         this.bathing = false;
         this.currentMission = '';
-        this.state = 'idle'; // Nuevo estado inicial
-        this.goal = null; // Nuevo objetivo
+        this.state = 'idle';
+        this.goal = null;
     }
 
     // Método para serializar las propiedades del NPC
@@ -69,8 +69,8 @@ class GhostPet {
         this.updateStats();
     }
 
-    // Método para subir de nivel
-    levelUp() {
+     // Método para subir de nivel
+     levelUp() {
         this.level++;
         this.xp -= this.xpToNextLevel;
         this.xpToNextLevel = Math.round(this.xpToNextLevel * 1.30);
@@ -79,7 +79,20 @@ class GhostPet {
         this.happiness = Math.min(this.happiness + 10, 100);
         player.showMsg(`¡Tu GhostPet ha subido al nivel ${this.level}!`, 'success');
         this.updateStats();
+        this.unlockAbilities();
         player.saveProgress();
+    }
+
+    // Método para desbloquear habilidades
+    unlockAbilities() {
+        const abilities = {
+            2: 'Double Jump',
+            5: 'Fireball',
+            10: 'Invisibility'
+        };
+        if (abilities[this.level]) {
+            player.showMsg(`¡Has desbloqueado una nueva habilidad: ${abilities[this.level]}!`, 'success');
+        }
     }
 
     // Método para actualizar la imagen del NPC
@@ -95,8 +108,8 @@ class GhostPet {
         return `assets/img/${this.type}${Math.min(this.level, levels[this.type] || 1)}.webp`;
     }
 
-    // Método para realizar una actividad
-    performActivity(activity) {
+     // Método para realizar una actividad
+     performActivity(activity) {
         if (this.illness && (activity === 'jugar' || activity === 'estudiar')) {
             player.showMsg('Tu GhostPet está enfermo y no puede realizar esta actividad.', 'warning');
             return;
@@ -130,13 +143,14 @@ class GhostPet {
                 this.energy = 100;
                 setTimeout(() => { this.energy = false; }, 15000);
             }
-            this.state = activity; // Actualizar el estado
+            this.state = activity;
             player.showMsg(`Tu GhostPet ha realizado la actividad: ${activity}`, 'info');
         }
         this.updateStats();
         this.checkRandomEvent();
         player.saveProgress();
     }
+
 
     // Método para aplicar los efectos de una actividad
     applyEffects(effects) {
@@ -229,42 +243,54 @@ class GhostPet {
         player.saveProgress();
     }
 
-    // Método para explorar un área
-    exploreArea(area) {
-        const explorationEffects = {
-            bosqueEncantado: {
-                xp: 30,
-                energy: -10,
-                happiness: 20,
-                knowledge: 15
-            },
-            montanaMisteriosa: {
-                xp: 40,
-                energy: -20,
-                health: 10,
-                skills: 20
-            },
-            cuevaSecreta: {
-                xp: 50,
-                energy: -25,
-                happiness: 25,
-                knowledge: 20
-            }
-        };
+     // Método para explorar un área
+     exploreArea(area) {
+        const explorationEvents = [
+            () => this.findRandomItem(),
+            () => this.startRandomMission(),
+            () => this.randomBattle(),
+            () => this.findCoins(),
+            () => this.loseCoins(),
+            () => this.changeRandomStats()
+        ];
 
-        const effects = explorationEffects[area];
-        if (effects) {
-            this.applyEffects(effects);
-            player.addMissionToHistory({ description: `Exploración en ${area}`, rewards: [] });
-            player.showMsg(`Tu GhostPet ha explorado: ${area}`, 'info');
-        } else {
-            player.showMsg("No se puede explorar esta área.", "warning");
-        }
+        const randomEvent = explorationEvents[Math.floor(Math.random() * explorationEvents.length)];
+        randomEvent();
+        player.addMissionToHistory({ description: `Exploración en ${area}`, rewards: [] });
+        player.showMsg(`Tu GhostPet ha explorado: ${area}`, 'info');
         this.updateStats();
         player.saveProgress();
     }
 
-    // Método para comprobar eventos aleatorios
+     // Método para iniciar una misión aleatoria
+     startRandomMission() {
+        const missions = ['vencerCriaturas', 'resolverPuzles', 'desafiosConocimiento', 'busquedaTesoros', 'rescatarCriaturas', 'explorarMontana', 'desafiosSabiduria'];
+        const mission = missions[Math.floor(Math.random() * missions.length)];
+        this.startMission(mission);
+    }
+
+    // Método para encontrar monedas
+    findCoins() {
+        const coinsFound = Math.floor(Math.random() * 100);
+        player.coins += coinsFound;
+        player.showMsg(`Tu GhostPet ha encontrado ${coinsFound} monedas!`, 'success');
+    } 
+
+    // Método para perder monedas
+    loseCoins() {
+        const coinsLost = Math.floor(Math.random() * 50);
+        player.coins = Math.max(player.coins - coinsLost, 0);
+        player.showMsg(`Tu GhostPet ha perdido ${coinsLost} monedas.`, 'danger');
+    }
+
+    // Método para perder monedas
+    loseCoins() {
+        const coinsLost = Math.floor(Math.random() * 50);
+        player.coins = Math.max(player.coins - coinsLost, 0);
+        player.showMsg(`Tu GhostPet ha perdido ${coinsLost} monedas.`, 'danger');
+    }
+    
+    //metodo que verificac eventos al azar
     checkRandomEvent() {
         const randomEvent = Math.random();
         if (randomEvent < 0.1) {

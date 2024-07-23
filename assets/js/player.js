@@ -7,11 +7,32 @@ class Player {
         this.inventory = [];
         this.coins = 0;
         this.missionHistory = [];
+        this.achievements = [];
         this.loadProgress();
         this.updateSelectionVisibility();
+        this.energyRegenInterval = setInterval(() => this.regenerateEnergy(), 60000); // Regenerar energía cada minuto
     }
 
-    // Añadir un nuevo GhostPet al jugador
+    // Regenerar energía de todas las mascotas
+    regenerateEnergy() {
+        this.ghostPetz.forEach(pet => {
+            if (pet.energy < 100) {
+                pet.energy = Math.min(pet.energy + 1, 100);
+                pet.updateStats();
+            }
+        });
+    }
+
+    // Añadir logro
+    addAchievement(achievement) {
+        if (!this.achievements.includes(achievement)) {
+            this.achievements.push(achievement);
+            this.showMsg(`¡Has desbloqueado el logro: ${achievement}!`, 'success');
+            this.saveProgress();
+        }
+    }
+
+    // Añadir una mascota nueva
     addGhostPet(ghostPet) {
         if (this.ghostPetz.length < 10) {
             this.ghostPetz.push(ghostPet);
@@ -94,13 +115,13 @@ class Player {
         $('#messages').prepend(`<p>${type.toUpperCase()}: ${message}</p>`).hide().fadeIn(1000);
     }
 
-    // Comprar una nueva mascota o artículo
+    // Método para comprar una mascota o artículo
     buyPetOrItem(type, isItem = false) {
         const costs = { 
             fantasma: 100, espectro: 200, wraith: 300, poltergeist: 400, banshee: 500,
-            pastel: 50, jarabe: 100, espada: 200 
+            pastel: 50, jarabe: 100, espada: 200, decoracion: 100, accesorio: 150 
         };
-        const levels = { pastel: 2, jarabe: 3, espada: 5 };
+        const levels = { pastel: 2, jarabe: 3, espada: 5, decoracion: 1, accesorio: 1 };
 
         const cost = costs[type] || 100;
         if (this.coins < cost) {
@@ -120,7 +141,9 @@ class Player {
             const itemsForSale = {
                 pastel: { name: 'Pastel', type: 'comida', value: 20, effect: { health: 10, energy: 10, happiness: 10, xp: 10 } },
                 jarabe: { name: 'Jarabe', type: 'medicina', value: 30, effect: { health: 40, xp: 10 } },
-                espada: { name: 'Espada', type: 'arma', value: 40, effect: { skills: 15, xp: 20 } }
+                espada: { name: 'Espada', type: 'arma', value: 40, effect: { skills: 15, xp: 20 } },
+                decoracion: { name: 'Decoración', type: 'decoracion', value: 50, effect: { happiness: 20 } },
+                accesorio: { name: 'Accesorio', type: 'accesorio', value: 50, effect: { skills: 10, happiness: 10 } }
             };
             const item = itemsForSale[type];
             this.addItemToInventory(item);
@@ -156,7 +179,8 @@ class Player {
             currentPetIndex: this.currentPetIndex,
             inventory: this.inventory,
             coins: this.coins,
-            missionHistory: this.missionHistory
+            missionHistory: this.missionHistory,
+            achievements: this.achievements
         };
         localStorage.setItem(`ghostPetzProgress_${slot}`, JSON.stringify(progress));
     }
@@ -169,6 +193,7 @@ class Player {
             this.inventory = progress.inventory;
             this.missionHistory = progress.missionHistory;
             this.currentPetIndex = progress.currentPetIndex;
+            this.achievements = progress.achievements || [];
             progress.ghostPetz.forEach(petData => {
                 const pet = new GhostPet(petData.type);
                 pet.deserialize(petData);
